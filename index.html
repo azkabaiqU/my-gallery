@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - baek lab's</title>
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
+    <!-- googlefont -->
+    <link href="https://fonts.googleapis.com/css2?family=Amatica+SC&display=swap" rel="stylesheet">
+    <!-- font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Amatica SC', cursive;
+            background-color: #F1F2F2;
+            color: #473924;
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        a {
+            font-family: 'Cinzel', serif;
+        }
+
+        p {
+
+            font-family: 'DM Serif Display', serif;
+        }
+
+        html,
+        body,
+        *,
+        *::before,
+        *::after {
+            cursor: none !important;
+        }
+
+        .cursor-img {
+            pointer-events: none;
+            /* Agar tidak menghalangi klik */
+            transition: transform 0.1s ease;
+            mix-blend-mode: difference;
+            /* opsional: buat efek keren */
+        }
+
+        .uniq-color {
+            mix-blend-mode: difference;
+        }
+
+        .jakarta {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 200;
+            /* atau 300 */
+        }
+
+        .imgpage1-container img,
+        .img2page1-container img {
+            top: 0;
+
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: translateY(0%);
+            /* grayscale */
+        }
+
+        /* .container-parallax-page2,
+        .container2-parallax-page2,
+        .container3-parallax-page2 {
+            height: 800px;
+            position: relative;
+            overflow: hidden;
+
+        }
+
+        .img-parallax-page2,
+        .img2-parallax-page2,
+        .img3-parallax-page2 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 130%;
+            /* lebih tinggi agar efek parallax terlihat */
+        /* object-fit: cover;
+            z-index: -1;
+            filter: grayscale(70%);
+            /* will-change: transform, filter; */
+        /* } */
+
+        .reveal-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            clip-path: inset(0% 100% 0% 0%);
+
+        }
+
+        /* .reveal-img1:hover, .reveal-img2:hover, .reveal-img3:hover, .reveal-img4:hover, .reveal-img5:hover{
+            filter: grayscale(0%);
+            transition-duration: 700ms;
+
+        } */
+
+        /* .scroll-textStyle{
+            font-size: 6rem;
+            margin-top: -50px;
+            margin-bottom: -25px;
+        } */
+        /* after selesai */
+        .scroll-textStyle {
+            /* background-color: aqua; */
+            font-size: 9rem;
+            margin-top: 0px;
+            margin-bottom: 0px;
+
+        }
+
+        .grayscale-origin {
+            filter: grayscale(100%)
+        }
+
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #F1F2F2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            flex-direction: column;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: #242424a1;
+            transition: width 0.3s;
+        }
+
+        #visitBtn {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.7s;
+            margin-top: 20px;
+        }
+
+        #mainContent {
+            opacity: 0;
+            transition: opacity 1s;
+            /* padding: 50px; */
+            /* text-align: center; */
+            /* font-size: 2rem; */
+        }
+
+        #mainContent.visible {
+            opacity: 1;
+        }
+
+        .split-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            z-index: 9998;
+            pointer-events: none;
+        }
+
+        .split-left,
+        .split-right {
+            flex: 1;
+            background: #F1F2F2;
+            border-right: 0.5;
+            border: #473924;
+
+            transition: transform 1s cubic-bezier(.7, 0, .3, 1);
+            will-change: transform;
+        }
+
+        .split-left.animate {
+            transform: translateX(-100%);
+        }
+
+        .split-right.animate {
+            transform: translateX(100%);
+        }
+
+        /* Light line styles */
+        .light-line-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 99998;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            opacity: 1;
+            transition: opacity 0.5s;
+        }
+
+        .light-line {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 0;
+            background-color: black;
+            border-radius: 8px;
+            animation: lightLineDown 0.8s cubic-bezier(.7, 0, .3, 1) forwards;
+        }
+
+        @keyframes lightLineDown {
+            from {
+                height: 0;
+            }
+
+            to {
+                height: 100vh;
+            }
+        }
+
+        .light-line-wrapper.hide {
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        /* responsive */
+
+        /* Default untuk mobile: top */
+        .img2HomeResposiveMode {
+            position: absolute;
+            top: 150px;
+            left: 0;
+        }
+
+        /* Tablet ke atas: bottom */
+        @media (min-width: 768px) {
+            .img2HomeResposiveMode {
+                top: auto;
+                /* reset nilai top */
+                bottom: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- loadingPage -->
+    <div id="loader" class="z-50 fixed w-full h-full top-0 left-0 bg-[#F1F2F2] flex justify-center items-center">
+        <div class="text-center">
+            <h3 class="text-xl">By: Baek Lab's</p>
+                <h1 class="text-6xl sm:text-8xl -mt-2">My Gallery</h1>
+                <h4 class="text-xl sm:text-3xl mt-2">every photo has its own memory</h4>
+
+                <!-- Progress Bar -->
+                <div class="flex justify-center items-center mt-10">
+                    <div>
+                        <div class="progress-bar w-[300px] sm:w-[500px] h-[7px] border border-[#473924] rounded-full">
+                            <div id="progressFill" class="progress-fill"></div>
+                        </div>
+                        <p id="loadingText" class="text-xl sm:text-2xl text-center mt-3">0%</p>
+
+                        <!-- Visit Button -->
+                        <div id="visitBtn">
+                            <button
+                                class="px-6 py-2 border border-[#473924] rounded-full text-xl hover:bg-[#473924] hover:text-white transition-all duration-300">
+                                <h4>Visit</h4>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+    <div class="light-line-wrapper" id="lightLineWrapper" style="display:none;">
+        <div class="light-line" id="lightLine"></div>
+    </div>
+
+    <div class="split-wrapper" id="splitWrapper">
+        <div class="split-left" id="splitLeft"></div>
+        <div class="split-right" id="splitRight"></div>
+    </div>
+    <!-- main navbar -->
+    <nav class="z-30 sticky top-0 w-full py-3 flex text-lg  md:px-[100px] sm:px-[80px] px-[50px]">
+        <div class="w-1/3 flex items-center">
+            <ul class="flex space-x-10" onmouseenter="changeCursor('mouse2.png')"
+                onmouseleave="changeCursor('mouse.png')">
+                <a href="#home" id="homeLink">Home</a>
+                <a href="#sinopsis" id="sinopsisLink">About</a>
+                <a href="#castFavorite" id="castLink">Memory</a>
+            </ul>
+        </div>
+        <div class=" text-2xl w-1/3 flex justify-center items-center">
+            <a>Baek Lab's</a>
+        </div>
+        <div class="w-1/3 flex justify-end items-center">
+            <a onmouseenter="changeCursor('mouse2.png')" onmouseleave="changeCursor('mouse.png')" class="underline"
+                href="https://azkabaiqu.github.io/src/html/index.html?fbclid=PAZXh0bgNhZW0CMTEAAacy6t5LP6JOqQdtaC8iKDQQjneFfTVbtszuz10jrGTe_oxCl2fzM9YcTDy_tg_aem_5LzMCz22VeYJ8AIr74qI5g">Go to Azka Project's</a>
+        </div>
+
+    </nav>
+    <div id="mainContent">
+        <div class="lg:px-[140px] md:px-[100px] sm:px-[80px] px-[50px]">
+            <section id="home"
+                class=" md:h-[800px] h-[1000px] relative  flex justify-center md:items-center items-end ">
+                <!-- tali scroll -->
+                <div class="z-30 absolute md:bottom-32 bottom-0 text-white  ">
+                    <!-- <object type="image/svg+xml" data="tali.svg"></object> -->
+                    <div class="flex text-[#473924]">
+                        <i class="fa-solid fa-arrow-right text-sm rotate-90"></i>
+                        <h4 class="ml-2">Scroll</h4>
+                    </div>
+                </div>
+                <!-- img1 atas kanan -->
+                <div class="absolute top-5 right-0">
+                    <div id="hover-img2Page1"
+                        class="img2page1-container overflow-hidden  duration-300 relative w-[150px] h-[150px] bg-[#5a5a5a]">
+                        <img  class="" src="https://ik.imagekit.io/imgazkaid2025/New%20Folder/IMG_5058.jpeg?updatedAt=1751363881088" alt="">
+                        <img  class=""
+                            src="https://ik.imagekit.io/imgazkaid2025/New%20Folder/IMG_5353.jpeg?updatedAt=1751363881129"
+                            alt="">
+                        <img  class=""
+                            src="https://ik.imagekit.io/imgazkaid2025/New%20Folder/IMG_5355.jpeg?updatedAt=1751363881061"
+                            alt="">
+
+                    </div>
+                </div>
+                <!-- box bawah kiri -->
+                <div class="img2HomeResposiveMode sm:w-auto w-full">
+                    <!-- visit cast -->
+                    <div class="flex items-center  ">
+                        <a href="#castFavorite" id="page1LinkMain">
+                                                    <div onmouseenter="changeCursor('mouse2.png')" onmouseleave="changeCursor('mouse.png')"
+                            class="group flex items-center">
+                            <div
+                                class="w-[50px] h-[50px] rounded-full border-[0.5px] border-[#473924] flex justify-center items-center overflow-hidden">
+                                <i
+                                    class="fa-solid fa-arrow-right text-sm rotate-45 group-hover:rotate-90 duration-200"></i>
+                            </div>
+                            <h3 class="text-xl ml-2">Visit <br>The Memory</h3>
+
+                        </div>
+                        </a>
+
+                    </div>
+                    <!-- img -->
+                    <div id="hover-img1Page1"
+                        class="imgpage1-container overflow-hidden  duration-300 relative mt-3 md:w-[290px] sm:w-[400px]  md:h-[160px] h-[400px] bg-[#5a5a5a]">
+                        <img  class=""
+                            src="https://ik.imagekit.io/imgazkaid2025/New%20Folder/IMG_6579.jpeg?updatedAt=1751363886422"
+                            alt="">
+                        <img  class=""
+                            src="https://ik.imagekit.io/imgazkaid2025/New%20Folder/IMG_5138.jpeg?updatedAt=1751363881685"
+                            alt="">
+                        <img  class=""
+                            src="https://ik.imagekit.io/imgazkaid2025/New%20Folder/IMG_6204.jpeg?updatedAt=1751363881326"
+                            alt="">
+                    </div>
+                </div>
+                <div class="w-[100%] md:pb-0 pb-32">
+                    <div class="md:text-center text-left">
+                        <h1 class="xl:text-[140px] lg:text-[100px] md:text-[80px] sm:text-[70px] text-[60px]">My Gallery</h1>
+                    </div>
+                    <div class="md:py-10 py-0 flex md:justify-end justify-start">
+                        <div class="md:w-[230px] sm:w-[330px] w-full">
+                            <div class="text-2xl flex justify-between">
+                                <h3 class="">2025 -</h3>
+                                <h4 class="">Backpacker</h4>
+                            </div>
+                            <p class="opacity-80 md:text-base text-lg">Memories stored in photos, These memories are about backpacking for 6 months in several places</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="sinopsis"
+                class=" relative  xl:h-[1000px] lg:h-[900px] h-[800px] mt-[300px] flex justify-center items-center">
+                <div class="z-40 w-[370px]  text-center ">
+                    <h1 class="">About</h1>
+                    <!-- <div class="h-[190px] overflow-hidden">
+                    <img  class="w-[100%] h-[100%] object-cover" src="https://ih1.redbubble.net/image.1960908013.9565/raf,360x360,075,t,fafafa:ca443f4786.jpg" alt="">
+                </div> -->
+                    <p class="text-lg mt-5 opacity-80 uniq-color">Hi, I'm Azka, I'm 17 years old but in 2025 I'll be 18, I had time to add to my hobby, which is photography, but I'm not really interested, maybe in the future I'll like it again, in 2 years maybe I'll go to college in China :))</p>
+                </div>
+                <!-- kiri bawah -->
+                <div
+                    class="container1-parallax-page2  absolute xl:bottom-28 bottom-10 left-0 2xl:w-[370px] lg:w-[300px] w-[200px] 2xl:h-[390px] lg:h-[310px] md:h-[210px] h-[180px]">
+                    <img  class="img1-parallax-page2 w-[100%] h-[100%] object-cover "
+                        src="https://ik.imagekit.io/imgazkaid2025/img-2025-portofolio/IMG_0068.JPG?updatedAt=1749198787667?tr=w-100,q-10,f-webp"
+                        alt="">
+                </div>
+                <!-- bawah tengah -->
+                <div
+                    class="md:block hidden container2-parallax-page2 overflow-visible absolute  bottom-0 right-0-0 2xl:w-[400px] lg:w-[320px] w-[220px] 2xl:h-[330px] lg:h-[250px] h-[150px]">
+                    <img  class="img2-parallax-page2 w-[100%] h-[100%] object-cover "
+                        src="https://ik.imagekit.io/imgazkaid2025/New%20Folder/IMG_5424.jpeg?updatedAt=1751363881236"
+                        alt="">
+                </div>
+                <!-- bawah kanan -->
+                <div
+                    class="container3-parallax-page2 overflow-visible absolute  xl:bottom-52 bottom-32 right-0 2xl:w-[320px] lg:w-[290px] w-[190px] 2xl:h-[400px] lg:h-[370px] md:h-[270px] h-[240px] ">
+                    <img  class="img3-parallax-page2 w-[100%] h-[100%] object-cover "
+                        src="https://ik.imagekit.io/imgazkaid2025/New%20Folder/IMG_5355.jpeg?updatedAt=1751363881061"
+                        alt="">
+                </div>
+                <!-- atas kanan -->
+                <div
+                    class="container4-parallax-page2 overflow-visible  absolute  top-20 xl:right-40 md:right-20 right-0 2xl:w-[320px] lg:w-[290px] w-[190px] 2xl:h-[270px] lg:h-[270px] h-[170px]">
+                    <img  class="img4-parallax-page2 w-[100%] h-[100%] object-cover "
+                        src="https://ik.imagekit.io/imgazkaid2025/New%20Folder/playing%20a%20guitar.jpeg?updatedAt=1751364130763"
+                        alt="">
+                </div>
+                <!-- atas kiri -->
+                <div
+                    class="container5-parallax-page2 overflow-visible  absolute  xl:top-40 top-32 xl:left-52 left-0 md:left-32 2xl:w-[250px] lg:w-[220px] w-[120px] 2xl:h-[270px] lg:h-[240px] h-[140px]">
+                    <img  class="img5-parallax-page2 w-[100%] h-[100%] object-cover "
+                        src="https://ik.imagekit.io/imgazkaid2025/New%20Folder/IMG_1882.jpeg?updatedAt=1751363881230"
+                        alt="">
+                </div>
+            </section>
+            <section id="castFavorite"
+                class="lg:h-[800px] sm:h-[1100px] h-[1200px] md:mt-[400px] mt-[200px] relative flex justify-center items-center  ">
+                <!-- text group -->
+                <div class="sm:w-[800px] w-full">
+                    <div class="lg:text-8xl text-7xl">
+                        <!-- h1 1-->
+                        <div>
+                            <h1>Where Time</h1>
+                        </div>
+                        <!-- h1 2 -->
+                        <div class="md:ml-16 ml-0">
+                            <h1>Stands Still</h1>
+                        </div>
+                    </div>
+                    <div class="w-full flex md:justify-end justify-start text-lg  mt-5">
+                        <p class="sm:w-[500px] w-auto opacity-80 ">For now i will only show my latest photo in 2025, maybe in the future i will change it according to the year or genre. In this photo is a recap of photos for 6 months with my friends from school, many interesting things happened during the 6 months.</p>
+                    </div>
+                </div>
+                <!-- untuk sementara -->
+                <div class="absolute top-20 right-5">
+                    <div class="h-[230px] w-[170px] ">
+                        <img  class="reveal-img"
+                            src="https://ik.imagekit.io/imgazkaid2025/img-2025-portofolio/IMG_0068.JPG?updatedAt=1749198787667?tr=w-100,q-10,f-webp"
+                            alt="">
+
+                    </div>
+                    <!-- <h3 class="text-2xl ">Song Kang</h3> -->
+                </div>
+                <!-- song kang -->
+                <div class="absolute bottom-0 left-0 ">
+                    <div class="h-[260px] overflow-hidden w-[210px] mb-1 ">
+                        <img  class="reveal-img"
+                            src="https://ik.imagekit.io/imgazkaid2025/fun%20other%20project/playing%20a%20guitar.jpeg?updatedAt=1751352088104?tr=w-100,q-10,f-webp"
+                            alt="">
+                    </div>
+                    <h3 class="text-2xl mt-1">Rockwell</h3>
+                </div>
+            </section>
+            <section class="h-[1000px] relative ">
+                <!-- lee si-young -->
+                <div class="absolute top-2 right-0 ">
+                    <div class="overflow-hidden sm:w-[400px] w-[350px] h-[230px] ">
+                        <img  class=" reveal-img"
+                            src="https://ik.imagekit.io/imgazkaid2025/New%20Folder/IMG_1882.jpeg?updatedAt=1751363881230"
+                            alt="">
+                    </div>
+                    <h3 class="text-2xl mt-1">Make a Snow-House </h3>
+                </div>
+                <!--  -->
+                <div class="absolute bottom-0 left-0 ">
+                    <div class="w-[130px] h-[130px] overflow-hidden mb-5">
+                        <img  class="reveal-img"
+                            src="https://ik.imagekit.io/imgazkaid2025/New%20Folder/IMG_5058.jpeg?updatedAt=1751363881088"
+                            alt="">
+                    </div>
+                    <div class="overflow-hidden w-[350px] h-[320px] ">
+                        <img  class=" reveal-img"
+                            src="https://ik.imagekit.io/imgazkaid2025/New%20Folder/IMG_5138.jpeg?updatedAt=1751363881685"
+                            alt="">
+                    </div>
+                    <h3 class="text-2xl mt-1">Taksim and Tulips</h3>
+                </div>
+            </section>
+            <section class="h-[570px] relative  ">
+                <div class="absolute top-2 right-0 ">
+                    <div class="overflow-hidden w-[200px] h-[230px] ">
+                        <img  class=" reveal-img"
+                            src="https://ik.imagekit.io/imgazkaid2025/New%20Folder/IMG_5709.jpeg?updatedAt=1751365877183"
+                            alt="">
+                    </div>
+                    <h3 class="text-2xl mt-1">Uzbek Festival</h3>
+                </div>
+                <div class="absolute bottom-0 right-0 ">
+                    <div class="overflow-hidden sm:w-[400px] w-[300px] h-[230px] ">
+                        <img  class=" reveal-img"
+                            src="https://ik.imagekit.io/imgazkaid2025/New%20Folder/IMG_6204.jpeg?updatedAt=1751365924811"
+                            alt="">
+                    </div>
+                    <h3 class="text-2xl mt-1">Gonola go to 3000-mdpl</h3>
+                </div>
+            </section>
+            <section class="h-[620px] relative mt-10">
+                <div class="absolute top-2 left-0 ">
+                    <div class="overflow-hidden w-[300px] h-[300px] ">
+                        <img  class=" reveal-img"
+                            src="https://ik.imagekit.io/imgazkaid2025/New%20Folder/IMG_6579.jpeg?updatedAt=1751365296476"
+                            alt="">
+                    </div>
+                </div>
+                <div class="absolute bottom-0 left-0 ">
+                    <div class="overflow-hidden w-[400px] h-[260px] ">
+                        <img  class=" reveal-img"
+                            src="https://ik.imagekit.io/imgazkaid2025/New%20Folder/IMG_6600.jpeg?updatedAt=1751365984287"
+                            alt="">
+                    </div>
+                    <h3 class="text-2xl mt-1">Whats App Kumning</h3>
+                </div>
+            </section>
+             <section class="h-[570px] relative  ">
+                <div class="absolute top-2 right-0 ">
+                    <div class="overflow-hidden w-[200px] h-[230px] ">
+                        <img  class=" reveal-img"
+                            src="https://ik.imagekit.io/imgazkaid2025/New%20Folder/IMG_7137.jpeg?updatedAt=1751364456846"
+                            alt="">
+                    </div>
+                    <h3 class="text-2xl mt-1">Laos</h3>
+                </div>
+                <div class="absolute bottom-0 right-56 ">
+                    <div class="overflow-hidden w-[200px] h-[230px] ">
+                        <img  class=" reveal-img"
+                            src="https://ik.imagekit.io/imgazkaid2025/New%20Folder/Screenshot%202025-07-01%20at%2017.13.33.jpg?updatedAt=1751364854618"
+                            alt="">
+                    </div>
+                    <h3 class="text-2xl mt-1">Kuala Lumpur</h3>
+                </div>
+            </section>
+        </div>
+
+        <!-- pt-300 -->
+        <section class="pin-selection-section w-full pt-[250px] overflow-hidden ">
+            <div class=" border-t-[0.05px] border-[#473924]/80  ">
+                <!-- text-8xl -mt-8 -mb-1  -->
+                <h3 id="scroll-text1" class=" scroll-textStyle">Created</h3>
+            </div>
+            <div class="text-right border-t-[0.05px] border-[#473924]/80">
+                <h3 id="scroll-text2" class=" scroll-textStyle ">By</h3>
+            </div>
+            <div class=" border-t-[0.05px] border-[#473924]/80">
+                <p class="opacity-0 scroll-textStyle">a</p>
+                <!-- <h3 id="scroll-text2" class="  ">By</h3> -->
+            </div>
+            <div class=" border-t-[0.05px] border-[#473924]/80">
+                <h3 id="scroll-text3" class=" scroll-textStyle ">Baek</h3>
+            </div>
+            <div class="text-right border-y-[0.05px] border-[#473924]/80">
+                <h3 id="scroll-text4" class=" scroll-textStyle ">Lab's</h3>
+            </div>
+        </section>
+
+        <footer class=" lg:px-[140px] md:px-[100px] sm:px-[80px] px-[50px] pb-10">
+            <div class="lg:flex bloc justify-between items-center">
+                <div class=" 2xl:w-[400px] xl:w-[300px] lg:w-[200px] w-full" onmouseenter="changeCursor('mouse2.png')"
+                    onmouseleave="changeCursor('mouse.png')">
+                    <a href="#home" id="homeLinkFooter"
+                        class="group flex items-end py-3 w-full lg:justify-start justify-center   ">
+                        <i
+                            class="fa-solid fa-arrow-right text-sm mb-1 -rotate-90 group-hover:rotate-0 opacity-0 group-hover:opacity-100 duration-300"></i>
+                        <h3 class=" group-hover:ml-5 ml-0 text-3xl lg:text-left text-center duration-300">Home</h3>
+                    </a>
+                    <a href="#sinopsis" id="sinopsisLinkFooter"
+                        class="group flex items-end py-3 w-full lg:justify-start justify-center   ">
+                        <i
+                            class="fa-solid fa-arrow-right text-sm mb-1  -rotate-90 group-hover:rotate-0 opacity-0 group-hover:opacity-100 duration-300"></i>
+                        <h3 class=" group-hover:ml-5 ml-0 text-3xl lg:text-left text-center duration-300">About</h3>
+                    </a>
+                    <a href="#castFavorite" id="castLinkFooter"
+                        class="group flex items-end lg:justify-start justify-center py-3 w-full    ">
+                        <i
+                            class="fa-solid fa-arrow-right text-sm mb-1  -rotate-90 group-hover:rotate-0 opacity-0 group-hover:opacity-100 duration-300"></i>
+                        <h3 class=" group-hover:ml-5 ml-0 text-3xl lg:text-left text-center duration-300">Memory</h3>
+                    </a>
+                </div>
+                <div class="lg:text-right text-center">
+                    <h1 class="text-[100px]">My Gallery</h1>
+                    <h4 class="text-4xl lg:-mt-5 -mt-5">every photo has its own memory</h4>
+                </div>
+            </div>
+            <div class="flex justify-between items-center md:text-lg mt-12 text-base">
+                <h4>Gallery at 2025</h4>
+                <h4>website create by: baek lab's</h4>
+            </div>
+        </footer>
+    </div>
+    <img  id="cursorImage" src="mouse.png" class="cursor-img w-7 h-7 fixed z-[9999]" style="top: 0; left: 0;"
+        alt="cursor" />
+    <!-- GSAP -->
+    <!-- Scroll Trigger -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+
+    <!-- javascript -->
+    <script src="script.js"></script>
+    <script src="gsap.js"></script>
+
+</body>
+
+</html>
