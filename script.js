@@ -220,10 +220,3 @@ document.addEventListener("keydown", function (e) {
         e.preventDefault();
     }
 });
-
-// google analisis
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-XB74M3MT9V');
